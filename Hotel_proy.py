@@ -1,4 +1,4 @@
-from funciones_hotel import tipo_habitaciones
+from funciones_hotel import filtrar_ubicaciones_por_habitacion, gestion_reserva, tipo_habitaciones
 
 def inicio():
     print("-" * 40)
@@ -20,9 +20,26 @@ def main():
     print(" ")
     print("Usted ha seleccionado la habitación ", habitacion)
     print("Elija la locacion de la habitación:")
+    ubicaciones_disponibles = filtrar_ubicaciones_por_habitacion(habitacion)
+
+    for ubicacion in ubicaciones_disponibles:
+        print(f"{ubicacion['opcion']}. {ubicacion['nombre']}")
+
+    opcion_ubicacion = int(input("Ingrese el número de la ubicación: "))
+    opciones_validas = list(map(lambda u: u["opcion"], ubicaciones_disponibles))
+
+    while opcion_ubicacion not in opciones_validas:
+        opcion_ubicacion = int(input("Opción inválida. Ingrese una ubicación disponible: "))
+
+    ubicacion_elegida = next(filter(lambda u: u["opcion"] == opcion_ubicacion, ubicaciones_disponibles))
+    print(f"Usted eligió: {ubicacion_elegida['nombre']}")
+
+    total = gestion_reserva()
+    print(f"Total de la reserva: {total}")
 
 
 
 
 if __name__ == "__main__":
     inicio()
+    main()
