@@ -1,4 +1,5 @@
 import random
+from functools import reduce
 
 def gestion_reserva():
     dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
@@ -34,9 +35,18 @@ def gestion_reserva():
 
 def tipo_habitaciones():
     print("Tipos de habitaciones disponibles:")
-    print("1. Habitación Estandar")
-    print("2. Habitación Superior")
-    print("3. Habitación Suite")
+    habitaciones = ["Habitación Estandar", "Habitación Superior", "Habitación Suite"]
+    lineas = map(lambda item: f"{item[0]}. {item[1]}", enumerate(habitaciones, start=1))
+    for linea in lineas:
+        print(linea)
+
+def filtrar_ubicaciones_por_habitacion(habitacion):
+    ubicaciones = [
+        {"opcion": 1, "nombre": "Vista al Jardin", "habitaciones": [1, 2]},
+        {"opcion": 2, "nombre": "Vista a la Ciudad", "habitaciones": [1, 2, 3]},
+        {"opcion": 3, "nombre": "Frente al Mar", "habitaciones": [3]}
+    ]
+    return list(filter(lambda ubicacion: habitacion in ubicacion["habitaciones"], ubicaciones))
 
 def pedir_piso():
     piso = int(input("Ingrese el número del piso (1-3): "))
