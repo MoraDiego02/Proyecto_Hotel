@@ -1,28 +1,37 @@
-from funciones_hotel import tipo_habitaciones
-
-def inicio():
-    print("-" * 40)
-    print("|      Bienvenido a Hotel Boutique     |")
-    print("-" * 40)
+from funciones_hotel import *
 
 def main():
-    dni = int(input("Ingrese su DNI: "))
-    while dni < 10000000 or dni > 99999999:
-        print("DNI inválido. Debe tener 8 dígitos.")
-        dni = int(input("Ingrese su DNI: "))
-    print(f"DNI ingresado: {dni}")
+    inicio()
+    hotel = cargar_matriz()
+    nombre, apellido, dni, mail, telefono = cargar_datos()
     tipo_habitaciones()
-    print("Elija el tipo de habitación que desea reservar:")
-    habitacion = int(input("Ingrese el número de la habitación (1-3): "))
-    while habitacion < 1 or habitacion > 3:
-        print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
-        habitacion = int(input("Ingrese el número de la habitación (1-3): "))
     print(" ")
-    print("Usted ha seleccionado la habitación ", habitacion)
-    print("Elija la locacion de la habitación:")
-
-
-
+    piso = pedir_piso()
+    hab = pedir_habitacion()
+    ubicaciones_disponibles = filtrar_ubicaciones_por_habitacion(hotel, hab)
+    if not ubicaciones_disponibles:
+        print("No hay ubicaciones disponibles para la habitación seleccionada.")
+        return
+    print()
+    print(" Seleccione la Ubicacion:")
+    print()
+    for ubicacion in ubicaciones_disponibles:
+        print(f"{ubicacion['opcion']}. {ubicacion['nombre']}")
+    print()
+    opcion_ubicacion = int(input("Seleccione una ubicación (1-2): "))
+    print()
+    while opcion_ubicacion < 1 or opcion_ubicacion > 2:
+        print("Opción inválida. Seleccione una ubicación válida.")
+        print()
+        opcion_ubicacion = int(input("Seleccione una ubicación (1-2): "))
+    hotel[piso-1][hab-1] = 1
+    print() 
+    print("\nReserva marcada en el mapa:")
+    print()
+    Mostrar_habitaciones(hotel) 
+    print(" ")
+    precio_final = gestion_reserva(hotel, piso, hab)
+    comprobante_reserva(dni, piso, hab, precio_final)
 
 if __name__ == "__main__":
-    inicio()
+    main()
