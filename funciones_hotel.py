@@ -43,12 +43,30 @@ def tipo_habitaciones():
 
 def filtrar_ubicaciones_por_habitacion(hotel, habitacion):
     # Agregué 'hotel' como parámetro porque tu main lo envía
+    if habitacion < 1 or habitacion > 3:
+        return []
+
     ubicaciones = [
         {"opcion": 1, "nombre": "Vista al Jardin", "habitaciones": [1, 2]},
         {"opcion": 2, "nombre": "Vista a la Ciudad", "habitaciones": [1, 2, 3]},
         {"opcion": 3, "nombre": "Frente al Mar", "habitaciones": [3]}
     ]
     return list(filter(lambda ubicacion: habitacion in ubicacion["habitaciones"], ubicaciones))
+
+def pedir_ubicacion(ubicaciones_disponibles):
+    opciones_validas = [ubicacion["opcion"] for ubicacion in ubicaciones_disponibles]
+
+    while True:
+        try:
+            opcion_ubicacion = int(input("Seleccione una ubicación (número): "))
+        except ValueError:
+            print("Entrada inválida. Debe ingresar un número.")
+            continue
+
+        if opcion_ubicacion in opciones_validas:
+            return opcion_ubicacion
+
+        print("Opción inválida. Seleccione una ubicación disponible.")
 
 def pedir_piso():
     piso = int(input("Ingrese el número del piso (1-3): "))

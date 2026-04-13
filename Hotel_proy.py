@@ -19,10 +19,12 @@ def main():
     print(" Seleccione la Ubicacion:")
     for ubicacion in ubicaciones_disponibles:
         print(f"{ubicacion['opcion']}. {ubicacion['nombre']}")
-    opcion_ubicacion = int(input("Seleccione una ubicación (1-2): "))
-    while opcion_ubicacion < 1 or opcion_ubicacion > 2:
-        print("Opción inválida. Seleccione una ubicación válida.")
-        opcion_ubicacion = int(input("Seleccione una ubicación (1-2): "))
+    opcion_ubicacion = pedir_ubicacion(ubicaciones_disponibles)
+    ubicacion_seleccionada = next(
+        ubicacion for ubicacion in ubicaciones_disponibles if ubicacion["opcion"] == opcion_ubicacion
+    )
+    print(f"Ubicación seleccionada: {ubicacion_seleccionada['nombre']}")
+
     hotel[piso-1][hab-1] = 1 
     print("\nReserva marcada en el mapa:")
     Mostrar_habitaciones(hotel) 
