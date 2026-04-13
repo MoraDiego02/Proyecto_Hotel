@@ -37,10 +37,7 @@ def gestion_reserva(hotel, piso, hab):
 def tipo_habitaciones():
     print()
     print("Tipos de habitaciones disponibles:")
-<<<<<<< HEAD
     print()
-=======
->>>>>>> c00a892e686c9d553cfdcb160c8ae4200435eb8b
     habitaciones = ["Habitación Estandar", "Habitación Superior", "Habitación Suite"]
     lineas = map(lambda item: f"{item[0]}. {item[1]}", enumerate(habitaciones, start=1))
     for linea in lineas:
@@ -63,10 +60,7 @@ def pedir_piso():
     return piso
 
 def pedir_habitacion():
-<<<<<<< HEAD
     print()
-=======
->>>>>>> c00a892e686c9d553cfdcb160c8ae4200435eb8b
     hab = int(input("Ingrese el número de la habitación (1-3): "))
     while hab < 1 or hab > 3:
         print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
@@ -107,7 +101,6 @@ def inicio():
     print("|      Bienvenido a Hotel Boutique     |")
     print("-" * 40)
 
-<<<<<<< HEAD
 def cargar_datos():
     nombre = input("|    Ingrese su nombre: ")
     print("-" * 40)
@@ -145,8 +138,6 @@ def cargar_datos():
         print("-" * 40)
         print()
     return nombre, apellido, dni, mail, telefono
-=======
->>>>>>> c00a892e686c9d553cfdcb160c8ae4200435eb8b
 
 
 
