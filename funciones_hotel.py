@@ -1,6 +1,15 @@
 import random
 from functools import reduce
 
+def ingresar_dni():
+    """La funcion ingresar_dni solicita al usuario que ingrese su DNI y valida que tenga 8 dígitos. retorna el DNI ingresado."""
+    dni = int(input("Ingrese su DNI: "))
+    while dni < 10000000 or dni > 99999999:
+        print("DNI inválido. Debe tener 8 dígitos.")
+        dni = int(input("Ingrese su DNI: "))
+    print(f"DNI ingresado: {dni}\n")
+    return dni
+
 def gestion_reserva(hotel, piso, hab):
     dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
     generar_dia = lambda: random.randint(0, 6)
@@ -52,6 +61,7 @@ def filtrar_ubicaciones_por_habitacion(hotel, habitacion):
     return list(filter(lambda ubicacion: habitacion in ubicacion["habitaciones"], ubicaciones))
 
 def pedir_piso():
+    """La función pedir_piso se encarga de solicitar al usuario que ingrese el número de piso que desea de la reserva, la misma contiene una validación donde si el usuario ingres aun numero erroneo u otra cosa el sistema le va a informar que es una opción invalida y debe volver a ingresar el número de piso. Retorna el número de piso ingresado por el usuario."""
     piso = int(input("Ingrese el número del piso (1-3): "))
     while piso < 1 or piso > 3:
         print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
@@ -59,6 +69,7 @@ def pedir_piso():
     return piso
 
 def pedir_habitacion():
+    """La función pedir_habitacion se encarga de solicitar al usuario que ingrese el numero de habitación que desea, la misma contiene una validación donde si el usuario ingresa un carácter erroneo el sistema le va a informar que es una opción invalida y debe volver a ingresar. Retorna el número de habitación ingresado por el usuario."""
     hab = int(input("Ingrese el número de la habitación (1-3): "))
     while hab < 1 or hab > 3:
         print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
@@ -82,10 +93,12 @@ def Mostrar_habitaciones(matriz):
     return matriz
 
 def cargar_matriz():
+    """La funcion cargar_matriz se encarga de crear una matriz de 3x3 con valores iniciales de 0, donde cada fila representa un piso y cada columna representa una habitación. Retorna la matriz creada."""
     matriz = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     return matriz
 
 def comprobante_reserva(dni, piso, hab, precio_final):
+    """La función comprobante_reserva se encarga de mostrar un comprobante de reserva con el DNI del cliente, el piso reservado, la habitación reservada y el precio final. Recibe como parámetros el DNI, el piso, la habitación y el precio final."""
     print("\n" + "-" * 30)
     print("--- COMPROBANTE DE RESERVA ---")
     print(f"DNI: {dni}")
@@ -95,6 +108,7 @@ def comprobante_reserva(dni, piso, hab, precio_final):
     print("-" * 30)
 
 def inicio():
+    """La función inicio se encarga de mostrar un mensaje de bienvenida al usuario al iniciar el programa."""
     print("-" * 40)
     print("|      Bienvenido a Hotel Boutique     |")
     print("-" * 40)
