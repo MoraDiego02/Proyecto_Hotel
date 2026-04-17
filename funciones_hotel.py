@@ -1,40 +1,51 @@
 import random
 from functools import reduce
 
+def ingresar_dni():
+    """La funcion ingresar_dni solicita al usuario que ingrese su DNI y valida que tenga 8 dígitos. retorna el DNI ingresado."""
+    dni = int(input("Ingrese su DNI: "))
+    while dni < 10000000 or dni > 99999999:
+        print("DNI inválido. Debe tener 8 dígitos.")
+        dni = int(input("Ingrese su DNI: "))
+    print(f"DNI ingresado: {dni}\n")
+    return dni
+
 def gestion_reserva(hotel, piso, hab):
-    # Nota: Agregué hotel, piso y hab como parámetros para que coincida con el main
     dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
     generar_dia = lambda: random.randint(0, 6)
-    que_dia_es = generar_dia() 
+    que_dia_es = generar_dia()
     precio_estandar = 250000
-    
+
     if 0 <= que_dia_es <= 3:
-        precio_final = precio_estandar * 0.80
+        mult_dia = 0.80
         print(f"Como hoy es {dias[que_dia_es]}, la reserva tiene un descuento del 20%!")
     else:
-        precio_final = precio_estandar * 1.10
+        mult_dia = 1.10
         print(f"Como hoy es {dias[que_dia_es]}, la reserva tiene un aumento del 10%.")
-        
-    print(f"El precio base de la reserva es: ${precio_final}")
-    print(" ")
+
     print("¿Con qué desea pagar?")
     print("1 - Tarjeta (5% de recargo)")
     print("2 - Efectivo (Sin recargo)")
-    
+
     metodo_pago = int(input("Ingrese el tipo (1 o 2): "))
-    while metodo_pago != 1 and metodo_pago != 2:
+    while metodo_pago not in [1, 2]:
         metodo_pago = int(input("Por favor, ingrese un número válido (1 o 2): "))
-    
+
+    mult_pago = 1.05 if metodo_pago == 1 else 1.0
+
+    multiplicadores = [mult_dia, mult_pago]
+    precio_final = reduce(lambda acc, m: acc * m, multiplicadores, precio_estandar)
+
     if metodo_pago == 1:
-        precio_final = precio_final * 1.05
         print("Se seleccionó tarjeta. Se aplica un 5% de recargo.")
-    else: 
+    else:
         print("Se seleccionó efectivo. No hay recargos extra.")
-        
+
     print(f"El precio final a abonar es de: ${precio_final}")
     return precio_final
 
 def tipo_habitaciones():
+    print()
     print("Tipos de habitaciones disponibles:")
     habitaciones = ["Habitación Estandar", "Habitación Superior", "Habitación Suite"]
     lineas = map(lambda item: f"{item[0]}. {item[1]}", enumerate(habitaciones, start=1))
@@ -42,10 +53,8 @@ def tipo_habitaciones():
         print(linea)
 
 def filtrar_ubicaciones_por_habitacion(hotel, habitacion):
-    # Agregué 'hotel' como parámetro porque tu main lo envía
     if habitacion < 1 or habitacion > 3:
         return []
-
     ubicaciones = [
         {"opcion": 1, "nombre": "Vista al Jardin", "habitaciones": [1, 2]},
         {"opcion": 2, "nombre": "Vista a la Ciudad", "habitaciones": [1, 2, 3]},
@@ -69,6 +78,7 @@ def pedir_ubicacion(ubicaciones_disponibles):
         print("Opción inválida. Seleccione una ubicación disponible.")
 
 def pedir_piso():
+    """La función pedir_piso se encarga de solicitar al usuario que ingrese el número de piso que desea de la reserva, la misma contiene una validación donde si el usuario ingres aun numero erroneo u otra cosa el sistema le va a informar que es una opción invalida y debe volver a ingresar el número de piso. Retorna el número de piso ingresado por el usuario."""
     piso = int(input("Ingrese el número del piso (1-3): "))
     while piso < 1 or piso > 3:
         print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
@@ -76,6 +86,7 @@ def pedir_piso():
     return piso
 
 def pedir_habitacion():
+    """La función pedir_habitacion se encarga de solicitar al usuario que ingrese el numero de habitación que desea, la misma contiene una validación donde si el usuario ingresa un carácter erroneo el sistema le va a informar que es una opción invalida y debe volver a ingresar. Retorna el número de habitación ingresado por el usuario."""
     hab = int(input("Ingrese el número de la habitación (1-3): "))
     while hab < 1 or hab > 3:
         print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
@@ -99,10 +110,12 @@ def Mostrar_habitaciones(matriz):
     return matriz
 
 def cargar_matriz():
+    """La funcion cargar_matriz se encarga de crear una matriz de 3x3 con valores iniciales de 0, donde cada fila representa un piso y cada columna representa una habitación. Retorna la matriz creada."""
     matriz = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     return matriz
 
 def comprobante_reserva(dni, piso, hab, precio_final):
+    """La función comprobante_reserva se encarga de mostrar un comprobante de reserva con el DNI del cliente, el piso reservado, la habitación reservada y el precio final. Recibe como parámetros el DNI, el piso, la habitación y el precio final."""
     print("\n" + "-" * 30)
     print("--- COMPROBANTE DE RESERVA ---")
     print(f"DNI: {dni}")
@@ -112,6 +125,7 @@ def comprobante_reserva(dni, piso, hab, precio_final):
     print("-" * 30)
 
 def inicio():
+    """La función inicio se encarga de mostrar un mensaje de bienvenida al usuario al iniciar el programa."""
     print("-" * 40)
     print("|      Bienvenido a Hotel Boutique     |")
     print("-" * 40)

@@ -3,11 +3,7 @@ from funciones_hotel import *
 def main():
     inicio()
     hotel = cargar_matriz()
-    dni = int(input("Ingrese su DNI: "))
-    while dni < 10000000 or dni > 99999999:
-        print("DNI inválido. Debe tener 8 dígitos.")
-        dni = int(input("Ingrese su DNI: "))
-    print(f"DNI ingresado: {dni}\n")
+    dni = ingresar_dni()
     tipo_habitaciones()
     print(" ")
     piso = pedir_piso()
