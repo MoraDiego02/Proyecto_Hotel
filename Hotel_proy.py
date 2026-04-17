@@ -35,10 +35,10 @@ def main():
     print(" ")
     precio_final = gestion_reserva(hotel, piso, hab)
     comprobante_reserva(dni, piso, hab, precio_final)
-    volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
-    if volver_a_reservar in ["si", "Si", "SI", "sI", "s", "S", "sí", "Sí", "SÍ", "sÍ"]:
+    volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ").lower()
+    if volver_a_reservar=="si":
         main()
-    else:
+    elif volver_a_reservar=="no":
         print("Gracias por utilizar nuestro sistema de reservas. ¡Hasta luego!")
 
 if __name__ == "__main__":
