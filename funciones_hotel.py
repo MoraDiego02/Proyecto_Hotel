@@ -1,9 +1,9 @@
 import random
 from functools import reduce
 
-def ingresar_dni():
+def ingresar_dni(dnis_ingresados):
     """La funcion ingresar_dni solicita al usuario que ingrese su DNI y valida que tenga 8 dígitos. retorna el DNI ingresado."""
-    dni = int(input("Ingrese su DNI: "))
+    dni = int(input("Ingrese su DNI para arrancar con la reserva: "))
     while dni < 10000000 or dni > 99999999:
         print("DNI inválido. Debe tener 8 dígitos.")
         dni = int(input("Ingrese su DNI: "))
@@ -48,7 +48,7 @@ def tipo_habitaciones():
     print()
     print("Tipos de habitaciones disponibles:")
     habitaciones = ["Habitación Estandar", "Habitación Superior", "Habitación Suite"]
-    lineas = map(lambda item: f"{item[0]}. {item[1]}", enumerate(habitaciones, start=1))
+    lineas = map(lambda i, h: f"{i}. {h}", range(1, len(habitaciones) + 1), habitaciones)
     for linea in lineas:
         print(linea)
 
@@ -100,10 +100,10 @@ def cargar_matriz():
 def comprobante_reserva(dni, piso, hab, precio_final):
     """La función comprobante_reserva se encarga de mostrar un comprobante de reserva con el DNI del cliente, el piso reservado, la habitación reservada y el precio final. Recibe como parámetros el DNI, el piso, la habitación y el precio final."""
     print("\n" + "-" * 30)
-    print("--- COMPROBANTE DE RESERVA ---")
+    print("--- COMPROBANTE DE RESERVA HOTEL BOUTIQUE ---")
     print(f"DNI: {dni}")
-    print(f"Piso reservado: {piso}")
-    print(f"Habitación reservada: {hab}")
+    print(f"Piso: {piso}")
+    print(f"Habitación: {hab}")
     print(f"Precio final a abonar: ${precio_final}")
     print("-" * 30)
 
