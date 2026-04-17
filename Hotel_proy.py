@@ -1,3 +1,4 @@
+import re
 from funciones_hotel import *
 
 def main():
@@ -25,21 +26,26 @@ def main():
     print(" Seleccione la Ubicacion:")
     for ubicacion in ubicaciones_disponibles:
         print(f"{ubicacion['opcion']}. {ubicacion['nombre']}")
-    opcion_ubicacion = int(input("Seleccione una ubicación (1-2): "))
-    while opcion_ubicacion < 1 or opcion_ubicacion > 2:
+    opcion_ubicacion = input("Seleccione una ubicación (1-3): ")
+    while not re.match(r'^[1-3]$', opcion_ubicacion):
         print("Opción inválida. Seleccione una ubicación válida.")
-        opcion_ubicacion = int(input("Seleccione una ubicación (1-2): "))
+        opcion_ubicacion = input("Seleccione una ubicación (1-3): ")
+    opcion_ubicacion = int(opcion_ubicacion)
     hotel[piso-1][hab-1] = 1 
     print("Reserva seleccionada:")
     Mostrar_habitaciones(hotel) 
     print(" ")
     precio_final = gestion_reserva(hotel, piso, hab)
     comprobante_reserva(dni, mail, piso, hab, precio_final)
-    volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ").lower()
-    if volver_a_reservar=="si":
+    volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
+    while not re.match(r'^(si|no)$', volver_a_reservar, re.IGNORECASE):
+        print("Respuesta inválida. Por favor ingrese 'si' o 'no'.")
+        volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
+ 
+    if re.match(r'^si$', volver_a_reservar, re.IGNORECASE):
         main()
-    elif volver_a_reservar=="no":
+    else:
         print("Gracias por utilizar nuestro sistema de reservas. ¡Hasta luego!")
-
+ 
 if __name__ == "__main__":
     main()

@@ -29,20 +29,19 @@ def cargar_datos():
     
     nombre = input("|    Ingrese su nombre: ")
     print("-" * 40)
-    while nombre == "":
-        print("El nombre no puede estar vacío. Por favor, ingrese su nombre.")
-        nombre = input("|   Ingrese su nombre: ")  
-        print("-" * 40) 
+    while not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', nombre):
+        print("Nombre inválido. Solo se permiten letras y espacios.")
+        nombre = input("|    Ingrese su nombre: ")
+        print("-" * 40)
     
     apellido = input("|    Ingrese su apellido: ")
-    print("-" * 40) 
-    while apellido == "":
-        print("El apellido no puede estar vacío. Por favor, ingrese su apellido.")
+    print("-" * 40)
+    while not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', apellido):
+        print("Apellido inválido. Solo se permiten letras y espacios.")
         apellido = input("|    Ingrese su apellido: ")
         print("-" * 40) 
 
     dni = ingresar_dni()
-
     mail = solicitar_email()
 
     telefono = input("|    Ingrese su número de teléfono: ")
@@ -73,9 +72,11 @@ def gestion_reserva(hotel, piso, hab):
     print("1 - Tarjeta (5% de recargo)")
     print("2 - Efectivo (Sin recargo)")
 
-    metodo_pago = int(input("Ingrese el tipo (1 o 2): "))
-    while metodo_pago not in [1, 2]:
-        metodo_pago = int(input("Por favor, ingrese un número válido (1 o 2): "))
+    metodo_pago = input("Ingrese el tipo (1 o 2): ")
+    while not re.match(r'^[12]$', metodo_pago):
+        print("Opción inválida. Por favor, ingrese 1 o 2.")
+        metodo_pago = input("Ingrese el tipo (1 o 2): ")
+    metodo_pago = int(metodo_pago)
 
     mult_pago = 1.05 if metodo_pago == 1 else 1.0
 
@@ -107,20 +108,20 @@ def filtrar_ubicaciones_por_habitacion(hotel, habitacion):
     return list(filter(lambda ubicacion: habitacion in ubicacion["habitaciones"], ubicaciones))
 
 def pedir_piso():
-    """La función pedir_piso se encarga de solicitar al usuario que ingrese el número de piso que desea de la reserva, la misma contiene una validación donde si el usuario ingres aun numero erroneo u otra cosa el sistema le va a informar que es una opción invalida y debe volver a ingresar el número de piso. Retorna el número de piso ingresado por el usuario."""
-    piso = int(input("Ingrese el número del piso (1-3): "))
-    while piso < 1 or piso > 3:
+    """Solicita el número de piso (1-3). Valida con regex antes de convertir a int."""
+    piso = input("Ingrese el número del piso (1-3): ")
+    while not re.match(r'^[1-3]$', piso):
         print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
-        piso = int(input("Ingrese el número del piso (1-3): "))
-    return piso
+        piso = input("Ingrese el número del piso (1-3): ")
+    return int(piso)
 
 def pedir_habitacion():
-    """La función pedir_habitacion se encarga de solicitar al usuario que ingrese el numero de habitación que desea, la misma contiene una validación donde si el usuario ingresa un carácter erroneo el sistema le va a informar que es una opción invalida y debe volver a ingresar. Retorna el número de habitación ingresado por el usuario."""
-    hab = int(input("Ingrese el número de la habitación (1-3): "))
-    while hab < 1 or hab > 3:
+    """Solicita el número de habitación (1-3). Valida con regex antes de convertir a int."""
+    hab = input("Ingrese el número de la habitación (1-3): ")
+    while not re.match(r'^[1-3]$', hab):
         print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
-        hab = int(input("Ingrese el número de la habitación (1-3): "))
-    return hab
+        hab = input("Ingrese el número de la habitación (1-3): ")
+    return int(hab)
 
 def Mostrar_habitaciones(matriz):
     columnas = len(matriz[0])
