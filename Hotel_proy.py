@@ -1,14 +1,18 @@
 from funciones_hotel import *
+
 def main():
     inicio()
     dnis_ingresados = []
     hotel = cargar_matriz()
-    dni = ingresar_dni(dnis_ingresados)
-    if dni in dnis_ingresados:
-        print("El DNI ingresado ya ha sido registrado. Por favor, ingrese un DNI diferente.")
-        dni = ingresar_dni(dnis_ingresados)
+
+    nombre, apellido, dni, mail, telefono = cargar_datos()
+    
+    if dni in dnis_ingresados:                                    
+        print("DNI ya registrado. Ingrese uno diferente.")
+        nombre, apellido, dni, mail, telefono = cargar_datos()
     else:
         dnis_ingresados.append(dni)
+
     tipo_habitaciones()
     print(" ")
     piso = pedir_piso()

@@ -1,14 +1,48 @@
 import random
+import re
 from functools import reduce
 
-def ingresar_dni(dnis_ingresados):
-    """La funcion ingresar_dni solicita al usuario que ingrese su DNI y valida que tenga 8 dígitos. retorna el DNI ingresado."""
-    dni = int(input("Ingrese su DNI para arrancar con la reserva: "))
-    while dni < 10000000 or dni > 99999999:
-        print("DNI inválido. Debe tener 8 dígitos.")
-        dni = int(input("Ingrese su DNI: "))
-    print(f"DNI ingresado: {dni}\n")
-    return dni
+def cargar_datos():
+    
+    nombre = input("|    Ingrese su nombre: ")
+    print("-" * 40)
+    while nombre == "":
+        print("El nombre no puede estar vacío. Por favor, ingrese su nombre.")
+        nombre = input("|   Ingrese su nombre: ")  
+        print("-" * 40) 
+    
+    apellido = input("|    Ingrese su apellido: ")
+    print("-" * 40) 
+    while apellido == "":
+        print("El apellido no puede estar vacío. Por favor, ingrese su apellido.")
+        apellido = input("|    Ingrese su apellido: ")
+        print("-" * 40) 
+
+    dni = input("|    Ingrese su DNI: ")
+    print("-" * 40) 
+    while not re.match(r'^\d{8}$',dni):
+        print("DNI inválido. Debe tener exactamente 8 dígitos.")
+        print()
+        dni = input("|    Ingrese su DNI: ")
+        print("-" * 40) 
+
+    mail = input("|    Ingrese su correo electrónico: ")
+    print("-" * 40) 
+    while "@" not in mail or "." not in mail or  "gmail" not in mail:
+        print("Correo electrónico inválido. Formato esperado: usuario@gmail.com")
+        mail = input("|    Ingrese su correo electrónico: ")
+        print("-" * 40)
+
+    telefono = input("|    Ingrese su número de teléfono: ")
+    print("-" * 40)
+    while not re.match(r'^\d{10,11}$',telefono):
+        print("Teléfono inválido. Debe tener entre 10 y 11 dígitos.")
+        print()
+        telefono = input("|    Ingrese su número de teléfono: ")
+        print("-" * 40)
+        print()
+    
+    return nombre, apellido, dni, mail, telefono
 
 def gestion_reserva(hotel, piso, hab):
     dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
