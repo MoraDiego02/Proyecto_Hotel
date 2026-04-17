@@ -2,6 +2,29 @@ import random
 import re
 from functools import reduce
 
+
+def ingresar_dni():
+    """Solicita y valida DNI con 8 dígitos usando regex."""
+    dni = input("|    Ingrese su DNI: ")
+    print("-" * 40)
+    while not re.match(r'^\d{8}$', dni):
+        print("DNI inválido. Debe tener exactamente 8 dígitos.")
+        print()
+        dni = input("|    Ingrese su DNI: ")
+        print("-" * 40)
+    return dni
+
+
+def solicitar_email():
+    """Solicita y valida correo electrónico usando regex."""
+    mail = input("|    Ingrese su correo electrónico: ")
+    print("-" * 40)
+    while not re.match(r'^[\w\.]+\@[\w\.]+\.[a-z]{2,3}$', mail):
+        print("Correo electrónico inválido. Formato esperado: usuario@dominio.com")
+        mail = input("|    Ingrese su correo electrónico: ")
+        print("-" * 40)
+    return mail
+
 def cargar_datos():
     
     nombre = input("|    Ingrese su nombre: ")
@@ -18,20 +41,9 @@ def cargar_datos():
         apellido = input("|    Ingrese su apellido: ")
         print("-" * 40) 
 
-    dni = input("|    Ingrese su DNI: ")
-    print("-" * 40) 
-    while not re.match(r'^\d{8}$',dni):
-        print("DNI inválido. Debe tener exactamente 8 dígitos.")
-        print()
-        dni = input("|    Ingrese su DNI: ")
-        print("-" * 40) 
+    dni = ingresar_dni()
 
-    mail = input("|    Ingrese su correo electrónico: ")
-    print("-" * 40) 
-    while "@" not in mail or "." not in mail or  "gmail" not in mail:
-        print("Correo electrónico inválido. Formato esperado: usuario@gmail.com")
-        mail = input("|    Ingrese su correo electrónico: ")
-        print("-" * 40)
+    mail = solicitar_email()
 
     telefono = input("|    Ingrese su número de teléfono: ")
     print("-" * 40)
@@ -131,11 +143,12 @@ def cargar_matriz():
     matriz = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     return matriz
 
-def comprobante_reserva(dni, piso, hab, precio_final):
-    """La función comprobante_reserva se encarga de mostrar un comprobante de reserva con el DNI del cliente, el piso reservado, la habitación reservada y el precio final. Recibe como parámetros el DNI, el piso, la habitación y el precio final."""
+def comprobante_reserva(dni, email, piso, hab, precio_final):
+    """Muestra un comprobante de reserva con DNI, email, piso, habitación y precio final."""
     print("\n" + "-" * 30)
     print("--- COMPROBANTE DE RESERVA HOTEL BOUTIQUE ---")
     print(f"DNI: {dni}")
+    print(f"Email: {email}")
     print(f"Piso: {piso}")
     print(f"Habitación: {hab}")
     print(f"Precio final a abonar: ${precio_final}")

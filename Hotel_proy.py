@@ -34,7 +34,7 @@ def main():
     Mostrar_habitaciones(hotel) 
     print(" ")
     precio_final = gestion_reserva(hotel, piso, hab)
-    comprobante_reserva(dni, piso, hab, precio_final)
+    comprobante_reserva(dni, mail, piso, hab, precio_final)
     volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ").lower()
     if volver_a_reservar=="si":
         main()
