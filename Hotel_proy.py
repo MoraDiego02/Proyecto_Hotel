@@ -23,7 +23,7 @@ def main():
         print("No hay ubicaciones disponibles para la habitación seleccionada.")
         return
     print(" ")
-    print(" Seleccione la Ubicacion:")
+    print(" Seleccione la ubicación:")
     for ubicacion in ubicaciones_disponibles:
         print(f"{ubicacion['opcion']}. {ubicacion['nombre']}")
     opcion_ubicacion = input("Seleccione una ubicación (1-3): ")
@@ -36,7 +36,7 @@ def main():
     Mostrar_habitaciones(hotel) 
     print(" ")
     precio_final = gestion_reserva(hotel, piso, hab)
-    comprobante_reserva(dni, mail, piso, hab, precio_final)
+    comprobante_reserva(dni, mail, piso, hab, precio_final, nombre, apellido)
     volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
     while not re.match(r'^(si|no)$', volver_a_reservar, re.IGNORECASE):
         print("Respuesta inválida. Por favor ingrese 'si' o 'no'.")

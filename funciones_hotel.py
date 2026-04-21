@@ -144,10 +144,11 @@ def cargar_matriz():
     matriz = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     return matriz
 
-def comprobante_reserva(dni, email, piso, hab, precio_final):
+def comprobante_reserva(dni, email, piso, hab, precio_final, nombre, apellido):
     """Muestra un comprobante de reserva con DNI, email, piso, habitación y precio final."""
     print("\n" + "-" * 30)
     print("--- COMPROBANTE DE RESERVA HOTEL BOUTIQUE ---")
+    print(f"Nombre y apellido: {nombre} {apellido}")
     print(f"DNI: {dni}")
     print(f"Email: {email}")
     print(f"Piso: {piso}")
