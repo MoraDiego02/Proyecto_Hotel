@@ -16,7 +16,7 @@ def ingresar_dni():
 
 
 def solicitar_email():
-    """Solicita y valida correo electrónico usando regex."""
+    """"""
     mail = input("|    Ingrese su correo electrónico: ")
     print("-" * 40)
     while not re.match(r'^[\w\.]+\@[\w\.]+\.[a-z]{2,3}$', mail):
@@ -26,6 +26,7 @@ def solicitar_email():
     return mail
 
 def cargar_datos():
+    """ """
     
     nombre = input("|    Ingrese su nombre: ")
     print("-" * 40)
