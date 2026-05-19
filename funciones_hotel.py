@@ -57,8 +57,8 @@ def gestion_reserva(hotel, piso, hab):
     dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
     generar_dia = lambda: random.randint(0, 6)
     que_dia_es = generar_dia()
-    precio_estandar = 250000
-
+    datos_habitaciones = habitaciones_hotel()
+    precio_estandar = datos_habitaciones[piso][hab]["precio"]
     if 0 <= que_dia_es <= 3:
         mult_dia = 0.80
         print(f"Como hoy es {dias[que_dia_es]}, la reserva tiene un descuento del 20%!")
@@ -89,21 +89,14 @@ def gestion_reserva(hotel, piso, hab):
     print(f"El precio final a abonar es de: ${precio_final}")
     return precio_final
 
-def tipo_habitaciones():
-    print()
-    print("Tipos de habitaciones disponibles:")
-    habitaciones = ["Habitación Estandar", "Habitación Superior", "Habitación Suite"]
-    lineas = map(lambda i, h: f"{i}. {h}", range(1, len(habitaciones) + 1), habitaciones)
-    for linea in lineas:
-        print(linea)
 
-def filtrar_ubicaciones_por_habitacion(hotel, habitacion):
-    ubicaciones = [
-        {"opcion": 1, "nombre": "Vista al Jardin", "habitaciones": [1, 2]},
-        {"opcion": 2, "nombre": "Vista a la Ciudad", "habitaciones": [1, 2, 3]},
-        {"opcion": 3, "nombre": "Frente al Mar", "habitaciones": [3]}
-    ]
-    return list(filter(lambda ubicacion: habitacion in ubicacion["habitaciones"], ubicaciones))
+def pedir_habitacion():
+    """La función pedir_habitacion se encarga de solicitar al usuario que ingrese el numero de habitación que desea, la misma contiene una validación donde si el usuario ingresa un carácter erroneo el sistema le va a informar que es una opción invalida y debe volver a ingresar. Retorna el número de habitación ingresado por el usuario."""
+    hab = int(input("Ingrese el número de la habitación (1-3): "))
+    while hab < 1 or hab > 3:
+        print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
+        hab = int(input("Ingrese el número de la habitación (1-3): "))
+    return hab
 
 def pedir_piso():
     """Solicita el número de piso (1-3). Valida con regex antes de convertir a int."""
@@ -113,13 +106,6 @@ def pedir_piso():
         piso = input("Ingrese el número del piso (1-3): ")
     return int(piso)
 
-def pedir_habitacion():
-    """Solicita el número de habitación (1-3). Valida con regex antes de convertir a int."""
-    hab = input("Ingrese el número de la habitación (1-3): ")
-    while not re.match(r'^[1-3]$', hab):
-        print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
-        hab = input("Ingrese el número de la habitación (1-3): ")
-    return int(hab)
 
 def Mostrar_habitaciones(matriz):
     columnas = len(matriz[0])
@@ -159,8 +145,81 @@ def inicio():
     print("-" * 40)
     print("|      Bienvenido a Hotel Boutique     |")
     print("-" * 40)
+    
+def habitaciones_hotel():
+    habitaciones = {
+        1: { #Habitaciones piso 1
+            1:{
+                "precio": 250000,
+                "tipo": "Habitación Estandar",
+                "descripcion": "Habitación con vista al jardín"
+            },
+            2:{
+                "precio": 250000,
+                "tipo": "Habitación Estandar",
+                "descripcion": "Habitación con vista al jardín"
+            },
+            3:{
+                "precio": 250000,
+                "tipo": "Habitación Estandar",
+                "descripcion": "Habitación con vista al jardín"
+            }
+        }, #Fin habitaciones piso 1
+        2: { #Habitaciones piso 2
+            1:{
+                "precio": 300000,
+                "tipo": "Habitación Superior",
+                "descripcion": "Habitación con vista a la ciudad"
+            },
+            2:{
+                "precio": 300000,
+                "tipo": "Habitación Superior",
+                "descripcion": "Habitación con vista a la ciudad"
+            },
+            3:{
+                "precio": 300000,
+                "tipo": "Habitación Superior",
+                "descripcion": "Habitación con vista a la ciudad"
+            }
+        }, #Fin habitaciones piso 2
+        3: { #Habitaciones piso 3
+            1:{
+                "precio": 350000,
+                "tipo": "Habitación Suite",
+                "descripcion": "Habitación con vista al mar"
+            },
+            2:{
+                "precio": 350000,
+                "tipo": "Habitación Suite",
+                "descripcion": "Habitación con vista al mar"
+            },
+            3:{
+                "precio": 350000,
+                "tipo": "Habitación Suite",
+                "descripcion": "Habitación con vista al mar"
+            }
+        }, #Fin habitaciones piso 3
+    } 
+    return habitaciones
 
+def mostrar_detalles_eleccion(habitacion_elegida):
+    """Muestra por pantalla el tipo, vista y precio de la habitación elegida."""
+    print("\n" + "=" * 30)
+    print("   DETALLES DE LA ELECCIÓN   ")
+    print("=" * 30)
+    print(f"Tipo: {habitacion_elegida['tipo']}")
+    print(f"Vista: {habitacion_elegida['descripcion']}")
+    print(f"Precio Base: ${habitacion_elegida['precio']}")
+    print("=" * 30 + "\n")
 
+def listado_habitaciones(datos_hotel):
+    print("Listado completo de habitaciones:")
+    for piso, habitaciones in datos_hotel.items():
+        print(f"\n Piso {piso}")
+        for hab, detalles in habitaciones.items():
+            print(f"  Habitación {hab}: {detalles['tipo']} - {detalles['descripcion']} - ${detalles['precio']}")
+    print("\n" + "=" * 30)
+    
 
 
 

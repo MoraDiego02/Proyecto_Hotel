@@ -5,15 +5,7 @@ def main():
     inicio()
     dnis_ingresados = []
     hotel = cargar_matriz()
-
-    nombre, apellido, dni, mail, telefono = cargar_datos()
-    
-    if dni in dnis_ingresados:                                    
-        print("DNI ya registrado. Ingrese uno diferente.")
-        nombre, apellido, dni, mail, telefono = cargar_datos()
-    else:
-        dnis_ingresados.append(dni)
-
+    dni = ingresar_dni()
     tipo_habitaciones()
     print(" ")
     piso = pedir_piso()
@@ -22,15 +14,15 @@ def main():
     if not ubicaciones_disponibles:
         print("No hay ubicaciones disponibles para la habitación seleccionada.")
         return
-    print(" ")
-    print(" Seleccione la ubicación:")
+    print(" Seleccione la Ubicacion:")
     for ubicacion in ubicaciones_disponibles:
         print(f"{ubicacion['opcion']}. {ubicacion['nombre']}")
-    opcion_ubicacion = input("Seleccione una ubicación (1-3): ")
-    while not re.match(r'^[1-3]$', opcion_ubicacion):
-        print("Opción inválida. Seleccione una ubicación válida.")
-        opcion_ubicacion = input("Seleccione una ubicación (1-3): ")
-    opcion_ubicacion = int(opcion_ubicacion)
+    opcion_ubicacion = pedir_ubicacion(ubicaciones_disponibles)
+    ubicacion_seleccionada = next(
+        ubicacion for ubicacion in ubicaciones_disponibles if ubicacion["opcion"] == opcion_ubicacion
+    )
+    print(f"Ubicación seleccionada: {ubicacion_seleccionada['nombre']}")
+
     hotel[piso-1][hab-1] = 1 
     print("Reserva seleccionada:")
     Mostrar_habitaciones(hotel) 
