@@ -148,7 +148,7 @@ def inicio():
     
 def habitaciones_hotel():
     habitaciones = {
-        1: { #Habitaciones piso 1
+        1: { 
             1:{
                 "precio": 250000,
                 "tipo": "Habitación Estandar",
@@ -164,8 +164,8 @@ def habitaciones_hotel():
                 "tipo": "Habitación Estandar",
                 "descripcion": "Habitación con vista al jardín"
             }
-        }, #Fin habitaciones piso 1
-        2: { #Habitaciones piso 2
+        }, 
+        2: { 
             1:{
                 "precio": 300000,
                 "tipo": "Habitación Superior",
@@ -181,8 +181,8 @@ def habitaciones_hotel():
                 "tipo": "Habitación Superior",
                 "descripcion": "Habitación con vista a la ciudad"
             }
-        }, #Fin habitaciones piso 2
-        3: { #Habitaciones piso 3
+        }, 
+        3: { 
             1:{
                 "precio": 350000,
                 "tipo": "Habitación Suite",
@@ -198,7 +198,7 @@ def habitaciones_hotel():
                 "tipo": "Habitación Suite",
                 "descripcion": "Habitación con vista al mar"
             }
-        }, #Fin habitaciones piso 3
+        } 
     } 
     return habitaciones
 
