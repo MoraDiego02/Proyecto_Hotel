@@ -24,20 +24,32 @@ def solicitar_email():
     return mail
 
 def cargar_datos():
-    
-    nombre = input("|    Ingrese su nombre: ")
-    print("-" * 40)
-    while not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', nombre):
-        print("Nombre inválido. Solo se permiten letras y espacios.")
-        nombre = input("|    Ingrese su nombre: ")
-        print("-" * 40)
-    
-    apellido = input("|    Ingrese su apellido: ")
-    print("-" * 40)
-    while not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', apellido):
-        print("Apellido inválido. Solo se permiten letras y espacios.")
-        apellido = input("|    Ingrese su apellido: ")
-        print("-" * 40) 
+    #Valicacion con try-except para el ingreso de nombre y apellido
+    nombre_valido = False
+    while not nombre_valido:
+        try:
+            nombre = input("|    Ingrese su nombre: ")
+            print("-" * 40)
+            if nombre.strip() == "":
+                raise ValueError("El nombre no puede estar vacío.")
+            if not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', nombre):
+                raise ValueError("Nombre inválido. Solo se permiten letras y espacios.")
+            nombre_valido = True
+        except ValueError as e:
+            print(e)
+
+    apellido_valido = False
+    while not apellido_valido:
+        try:
+            apellido = input("|    Ingrese su apellido: ")
+            print("-" * 40)
+            if apellido.strip() == "":
+                raise ValueError("El apellido no puede estar vacío.")
+            if not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', apellido):
+                raise ValueError("Apellido inválido. Solo se permiten letras y espacios.")
+            apellido_valido = True
+        except ValueError as e:
+            print(e) 
 
     dni = ingresar_dni()
     mail = solicitar_email()
@@ -58,7 +70,16 @@ def gestion_reserva(hotel, piso, hab):
     generar_dia = lambda: random.randint(0, 6)
     que_dia_es = generar_dia()
     datos_habitaciones = habitaciones_hotel()
-    precio_estandar = datos_habitaciones[piso][hab]["precio"]
+
+    #Se controla que el precio base no sea negativo
+    try:
+        precio_estandar = datos_habitaciones[piso][hab]["precio"]
+        if precio_estandar < 0:
+            raise ValueError("El precio de la habitación no puede ser negativo.")
+    except ValueError as e:
+        print(f"Error en el precio: {e}")
+        return 0
+    
     if 0 <= que_dia_es <= 3:
         mult_dia = 0.80
         print(f"Como hoy es {dias[que_dia_es]}, la reserva tiene un descuento del 20%!")
@@ -70,11 +91,17 @@ def gestion_reserva(hotel, piso, hab):
     print("1 - Tarjeta (5% de recargo)")
     print("2 - Efectivo (Sin recargo)")
 
-    metodo_pago = input("Ingrese el tipo (1 o 2): ")
-    while not re.match(r'^[12]$', metodo_pago):
-        print("Opción inválida. Por favor, ingrese 1 o 2.")
-        metodo_pago = input("Ingrese el tipo (1 o 2): ")
-    metodo_pago = int(metodo_pago)
+    #Validacion con try-except para el ingreso del método de pago
+    pago_valido = False
+    while not pago_valido:
+        try:
+            metodo_pago_str = input("Ingrese el tipo (1 o 2): ")
+            if not re.match(r'^[12]$', metodo_pago_str):
+                raise ValueError("Opción inválida. Por favor, ingrese 1 o 2.")
+            metodo_pago = int(metodo_pago_str)
+            pago_valido = True
+        except ValueError as e:
+            print(e)
 
     mult_pago = 1.05 if metodo_pago == 1 else 1.0
 
@@ -91,11 +118,17 @@ def gestion_reserva(hotel, piso, hab):
 
 
 def pedir_habitacion():
-    """La función pedir_habitacion se encarga de solicitar al usuario que ingrese el numero de habitación que desea, la misma contiene una validación donde si el usuario ingresa un carácter erroneo el sistema le va a informar que es una opción invalida y debe volver a ingresar. Retorna el número de habitación ingresado por el usuario."""
-    hab = int(input("Ingrese el número de la habitación (1-3): "))
-    while hab < 1 or hab > 3:
-        print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
-        hab = int(input("Ingrese el número de la habitación (1-3): "))
+    """Solicita el número de habitación (1-3). Controla letras y valores fuera de rango con try/except."""
+    #Validacion con try-except para el ingreso del número de habitación
+    ingreso_valido = False
+    while not ingreso_valido:
+        try:
+            hab = int(input("Ingrese el número de la habitación (1-3): "))
+            if hab < 1 or hab > 3:
+                raise ValueError("El número debe estar entre 1 y 3.")
+            ingreso_valido = True
+        except ValueError:
+            print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
     return hab
 
 def pedir_piso():
