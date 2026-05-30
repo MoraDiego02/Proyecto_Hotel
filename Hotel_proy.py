@@ -1,3 +1,4 @@
+
 import re
 from funciones_hotel import *
 
@@ -9,16 +10,16 @@ def main():
     nombre, apellido, dni, mail, telefono = cargar_datos()
     
     #Se controla que el DNI ingresado sea único para evitar duplicados en el sistema de reservas
-    dni_unico = False
-    while not dni_unico:
+    while True:
         try:
             if dni in dnis_ingresados:
-                raise ValueError("DNI ya registrado. Ingrese uno diferente.")
+                raise ValueError
             dnis_ingresados.append(dni)
-            dni_unico = True
-        except ValueError as e:
-            print(e)
+        except ValueError:
+            print("DNI ya registrado. Ingrese uno diferente.")
             nombre, apellido, dni, mail, telefono = cargar_datos()
+        else:
+            break
 
     datos_hotel = habitaciones_hotel()
     print(" ")
@@ -28,11 +29,14 @@ def main():
     hab = pedir_habitacion()
 
     #Se controla que la habitación seleccionada exista en el diccionario
-    try:
-        habitacion_elegida = datos_hotel[piso][hab]
-    except KeyError:
-        print("Error: la habitación seleccionada no existe en el sistema.")
-        return
+    while True:
+        try:
+            habitacion_elegida = datos_hotel[piso][hab]
+            break
+        except KeyError:
+            print("Error: la habitación seleccionada no existe en el sistema.")
+        else:
+            break
 
     habitacion_elegida = datos_hotel[piso][hab]
     mostrar_detalles_eleccion(habitacion_elegida)
@@ -43,11 +47,15 @@ def main():
 
     precio_final = gestion_reserva(hotel, piso, hab)
     comprobante_reserva(dni, mail, piso, hab, precio_final, nombre, apellido)
-    
-    volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
-    while not re.match(r'^(si|no)$', volver_a_reservar, re.IGNORECASE):
-        print("Respuesta inválida. Por favor ingrese 'si' o 'no'.")
-        volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
+    while True:
+        try:
+            volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
+            if not re.match(r'^(si|no)$', volver_a_reservar, re.IGNORECASE):
+                raise ValueError
+        except ValueError:
+            print("Respuesta inválida. Por favor ingrese 'si' o 'no'.")
+        else:
+            break
  
     if re.match(r'^si$', volver_a_reservar, re.IGNORECASE):
         main()
