@@ -4,11 +4,7 @@ from functools import reduce
 
 
 def ingresar_dni():
-    dni = input("|    Ingrese su DNI: ")
-    print("-" * 40)
-    while not re.match(r'^\d{8}$', dni):
-        print("DNI inválido. Debe tener exactamente 8 dígitos.")
-        print()
+    try:
         dni = input("|    Ingrese su DNI: ")
         print("-" * 40)
     return dni
