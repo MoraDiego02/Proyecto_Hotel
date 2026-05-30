@@ -4,7 +4,11 @@ from functools import reduce
 
 
 def ingresar_dni():
-    try:
+    dni = input("|    Ingrese su DNI: ")
+    print("-" * 40)
+    while not re.match(r'^\d{8}$', dni):
+        print("DNI inválido. Debe tener exactamente 8 dígitos.")
+        print()
         dni = input("|    Ingrese su DNI: ")
         print("-" * 40)
     return dni
@@ -248,7 +252,4 @@ def listado_habitaciones(datos_hotel):
         for hab, detalles in habitaciones.items():
             print(f"  Habitación {hab}: {detalles['tipo']} - {detalles['descripcion']} - ${detalles['precio']}")
     print("\n" + "=" * 30)
-    
-
-
 
