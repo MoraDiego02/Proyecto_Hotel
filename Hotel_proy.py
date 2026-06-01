@@ -1,3 +1,4 @@
+
 import re
 from funciones_hotel import *
 
@@ -20,12 +21,24 @@ def main(historial = []):
     print(" ")
     piso = pedir_piso()
     hab = pedir_habitacion()
+
+    #Se controla que la habitación seleccionada exista en el diccionario
+    while True:
+        try:
+            habitacion_elegida = datos_hotel[piso][hab]
+            break
+        except KeyError:
+            print("Error: la habitación seleccionada no existe en el sistema.")
+        else:
+            break
+
     habitacion_elegida = datos_hotel[piso][hab]
     mostrar_detalles_eleccion(habitacion_elegida)
     hotel[piso-1][hab-1] = 1 
     print("Reserva seleccionada:")
     Mostrar_habitaciones(hotel) 
     print(" ")
+
     precio_final = gestion_reserva(hotel, piso, hab)
     checkin = registrar_checkin()
     comprobante_reserva(dni, mail, piso, hab, precio_final, nombre, apellido, checkin)
