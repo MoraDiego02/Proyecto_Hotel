@@ -2,53 +2,68 @@ import random
 import re
 from functools import reduce
 
+def cargar_datos(historial):
 
-def ingresar_dni():
-    dni = input("|    Ingrese su DNI: ")
-    print("-" * 40)
-    while not re.match(r'^\d{8}$', dni):
-        print("DNI inválido. Debe tener exactamente 8 dígitos.")
-        print()
-        dni = input("|    Ingrese su DNI: ")
-        print("-" * 40)
-    return dni
-
-
-def solicitar_email():
-    mail = input("|    Ingrese su correo electrónico: ")
-    print("-" * 40)
-    while not re.match(r'^[\w\.]+\@[\w\.]+\.[a-z]{2,3}$', mail):
-        print("Correo electrónico inválido. Formato esperado: usuario@dominio.com")
-        mail = input("|    Ingrese su correo electrónico: ")
-        print("-" * 40)
-    return mail
-
-def cargar_datos():
-    
+    print("- -" * 14)
     nombre = input("|    Ingrese su nombre: ")
-    print("-" * 40)
+    print("- -" * 14)
     while not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', nombre):
+        print()
         print("Nombre inválido. Solo se permiten letras y espacios.")
+        print()
+        print("- -" * 14)
         nombre = input("|    Ingrese su nombre: ")
-        print("-" * 40)
+        print("- -" * 14)
     
     apellido = input("|    Ingrese su apellido: ")
-    print("-" * 40)
+    print("- -" * 14)
     while not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', apellido):
+        print()
         print("Apellido inválido. Solo se permiten letras y espacios.")
+        print()
+        print("- -" * 14)
         apellido = input("|    Ingrese su apellido: ")
-        print("-" * 40) 
+        print("- -" * 14)
 
-    dni = ingresar_dni()
-    mail = solicitar_email()
+    dnis_ingresados = [r["dni"] for r in historial]
+    dni = input("|    Ingrese su DNI: ")
+    print("- -" * 14)
+    while not re.match(r'^\d{8}$', dni) or dni in dnis_ingresados:
+        if dni in dnis_ingresados:
+            print()
+            print("DNI ya registrado. Ingrese uno diferente.")
+        else:
+            print()
+            print("DNI inválido. Debe tener exactamente 8 dígitos.")
+        print()
+        print("- -" * 14)
+        dni = input("|    Ingrese su DNI: ")
+        print("- -" * 14)
+
+    emails_ingresados = [r["mail"] for r in historial]
+    mail = input("|    Ingrese su correo electrónico: ")
+    print("- -" * 14)
+    while not re.match(r'^[\w\.]+\@[\w\.]+\.[a-z]{2,3}$', mail) or mail in emails_ingresados:
+        if mail in emails_ingresados:
+            print()
+            print("Email ya registrado. Ingrese uno diferente.")
+        else:
+            print()
+            print("Correo electrónico inválido. Formato esperado: usuario@dominio.com")
+            print()
+        print("- -" * 14)
+        mail = input("|    Ingrese su correo electrónico: ")
+        print("- -" * 14)
 
     telefono = input("|    Ingrese su número de teléfono: ")
-    print("-" * 40)
+    print("- -" * 14)
     while not re.match(r'^\d{10,11}$',telefono):
+        print()
         print("Teléfono inválido. Debe tener entre 10 y 11 dígitos.")
         print()
+        print("- -" * 14)
         telefono = input("|    Ingrese su número de teléfono: ")
-        print("-" * 40)
+        print("- -" * 14)
         print()
     
     return nombre, apellido, dni, mail, telefono
@@ -62,17 +77,24 @@ def gestion_reserva(hotel, piso, hab):
     if 0 <= que_dia_es <= 3:
         mult_dia = 0.80
         print(f"Como hoy es {dias[que_dia_es]}, la reserva tiene un descuento del 20%!")
+        print()
     else:
         mult_dia = 1.10
         print(f"Como hoy es {dias[que_dia_es]}, la reserva tiene un aumento del 10%.")
-
+        print()
+    print("=" * 40)
     print("¿Con qué desea pagar?")
     print("1 - Tarjeta (5% de recargo)")
     print("2 - Efectivo (Sin recargo)")
+    print("=" * 40)
 
+    print()
     metodo_pago = input("Ingrese el tipo (1 o 2): ")
+    print()
     while not re.match(r'^[12]$', metodo_pago):
+        print()
         print("Opción inválida. Por favor, ingrese 1 o 2.")
+        print()
         metodo_pago = input("Ingrese el tipo (1 o 2): ")
     metodo_pago = int(metodo_pago)
 
@@ -82,10 +104,11 @@ def gestion_reserva(hotel, piso, hab):
     precio_final = reduce(lambda acc, m: acc * m, multiplicadores, precio_estandar)
 
     if metodo_pago == 1:
+        
         print("Se seleccionó tarjeta. Se aplica un 5% de recargo.")
     else:
         print("Se seleccionó efectivo. No hay recargos extra.")
-
+    print()
     print(f"El precio final a abonar es de: ${precio_final}")
     return precio_final
 
@@ -94,16 +117,22 @@ def pedir_habitacion():
     """La función pedir_habitacion se encarga de solicitar al usuario que ingrese el numero de habitación que desea, la misma contiene una validación donde si el usuario ingresa un carácter erroneo el sistema le va a informar que es una opción invalida y debe volver a ingresar. Retorna el número de habitación ingresado por el usuario."""
     hab = int(input("Ingrese el número de la habitación (1-3): "))
     while hab < 1 or hab > 3:
+        print()
         print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
+        print()
         hab = int(input("Ingrese el número de la habitación (1-3): "))
+    print()
     return hab
 
 def pedir_piso():
     """Solicita el número de piso (1-3). Valida con regex antes de convertir a int."""
     piso = input("Ingrese el número del piso (1-3): ")
     while not re.match(r'^[1-3]$', piso):
+        print()
         print("Opción inválida. Por favor, ingrese un número entre 1 y 3.")
+        print()
         piso = input("Ingrese el número del piso (1-3): ")
+    print()
     return int(piso)
 
 
@@ -128,23 +157,31 @@ def cargar_matriz():
     matriz = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     return matriz
 
-def comprobante_reserva(dni, email, piso, hab, precio_final, nombre, apellido):
+def comprobante_reserva(dni, email, piso, hab, precio_final, nombre, apellido, checkin):
     """Muestra un comprobante de reserva con DNI, email, piso, habitación y precio final."""
-    print("\n" + "-" * 30)
-    print("--- COMPROBANTE DE RESERVA HOTEL BOUTIQUE ---")
+    print("\n" + "=" * 43)
+    print()
+    print("|  COMPROBANTE DE RESERVA HOTEL BOUTIQUE  |")
+    print("\n" + "=" * 43)
     print(f"Nombre y apellido: {nombre} {apellido}")
     print(f"DNI: {dni}")
     print(f"Email: {email}")
     print(f"Piso: {piso}")
     print(f"Habitación: {hab}")
     print(f"Precio final a abonar: ${precio_final}")
-    print("-" * 30)
+    print()
+    print(f"Fecha de check-in: {checkin[0]}/{checkin[1]}/{checkin[2]}")
+    print(f"Hora de check-in:  {checkin[3]}:{checkin[4]:02d}")
+
+    print("=" * 43)
 
 def inicio():
     """La función inicio se encarga de mostrar un mensaje de bienvenida al usuario al iniciar el programa."""
-    print("-" * 40)
+    print("=" * 40)
+    print()
     print("|      Bienvenido a Hotel Boutique     |")
-    print("-" * 40)
+    print()
+    print("=" * 40)
     
 def habitaciones_hotel():
     habitaciones = {
@@ -204,22 +241,34 @@ def habitaciones_hotel():
 
 def mostrar_detalles_eleccion(habitacion_elegida):
     """Muestra por pantalla el tipo, vista y precio de la habitación elegida."""
-    print("\n" + "=" * 30)
+    print("\n" + "=" * 40)
     print("   DETALLES DE LA ELECCIÓN   ")
-    print("=" * 30)
+    print("=" * 40)
     print(f"Tipo: {habitacion_elegida['tipo']}")
     print(f"Vista: {habitacion_elegida['descripcion']}")
     print(f"Precio Base: ${habitacion_elegida['precio']}")
-    print("=" * 30 + "\n")
+    print("=" * 40 + "\n")
 
 def listado_habitaciones(datos_hotel):
+    print("\n" + "=" * 40)
+    print()
     print("Listado completo de habitaciones:")
     for piso, habitaciones in datos_hotel.items():
         print(f"\n Piso {piso}")
         for hab, detalles in habitaciones.items():
             print(f"  Habitación {hab}: {detalles['tipo']} - {detalles['descripcion']} - ${detalles['precio']}")
-    print("\n" + "=" * 30)
-    
+    print("\n" + "=" * 40)
+
+def registrar_checkin():
+    dias_por_mes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    mes = random.randint(1, 12)
+    dia = random.randint(1, dias_por_mes[mes-1])
+    anio = random.randint(2024, 2026)
+    hora = random.randint(0, 23)
+    minuto = random.randint(0, 59)
+
+    checkin = (dia, mes, anio, hora, minuto)
+    return checkin
 
 
 
