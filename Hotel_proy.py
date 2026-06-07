@@ -12,8 +12,21 @@ def main(historial = []):
         "apellido": apellido,
         "dni": dni,
         "mail": mail,
-        "telefono": telefono
+        "telefono": telefono,
+        "checkin": checkin 
     })
+
+   #Se controla que el DNI ingresado sea único para evitar duplicados en el sistema de reservas
+    while True:
+        try:
+            if dni in dnis_ingresados:
+                raise ValueError
+            dnis_ingresados.append(dni)
+        except ValueError:
+            print("DNI ya registrado. Ingrese uno diferente.")
+            nombre, apellido, dni, mail, telefono = cargar_datos()
+        else:
+            break
 
     datos_hotel = habitaciones_hotel()
     print(" ")
@@ -74,6 +87,8 @@ def main(historial = []):
             print(f"     DNI: {r['dni']}")
             print(f"     Mail: {r['mail']}")
             print(f"     Teléfono: {r['telefono']}")
+            print(f"     Fecha de check-in: {r['checkin'][0]}/{r['checkin'][1]}/{r['checkin'][2]}")
+            print(f"     Hora de check-in:  {r['checkin'][3]}:{r['checkin'][4]:02d}")
             print("=" * 38)
     print()
     print("Gracias por utilizar nuestro sistema de reservas. ¡Hasta luego!")

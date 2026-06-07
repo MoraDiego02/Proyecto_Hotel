@@ -85,8 +85,26 @@ def gestion_reserva(hotel, piso, hab):
         else:
             break
     
-    if 0 <= que_dia_es <= 3:
+    # Definimos conjuntos de días para usar operaciones matemáticas de conjuntos
+    dias_semana_laboral = {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes"}
+    dias_fin_semana = {"Sabado", "Domingo"}
+
+    # 1. Unión (.union()): Combina elementos de ambos conjuntos
+    todos_los_dias = dias_semana_laboral.union(dias_fin_semana)
+
+    dias_descuento = {"Lunes", "Martes", "Miercoles", "Jueves"}
+
+    # 2. Diferencia (.difference()): Encuentra los elementos que están en el primero pero no en el segundo
+    dias_aumento = todos_los_dias.difference(dias_descuento)
+
+    # 3. Intersección (.intersection()): Encuentra los elementos en ambos conjuntos (Viernes en este caso)
+    dias_aumento_laboral = dias_semana_laboral.intersection(dias_aumento)
+
+    dia_actual = dias[que_dia_es]
+
+    if dia_actual in dias_descuento:
         mult_dia = 0.80
+<<<<<<< HEAD
         print(f"Como hoy es {dias[que_dia_es]}, la reserva tiene un descuento del 20%!")
         print()
     else:
@@ -94,6 +112,16 @@ def gestion_reserva(hotel, piso, hab):
         print(f"Como hoy es {dias[que_dia_es]}, la reserva tiene un aumento del 10%.")
         print()
     print("=" * 40)
+=======
+        print(f"Como hoy es {dia_actual}, la reserva tiene un descuento del 20%!")
+    else:
+        mult_dia = 1.10
+        if dia_actual in dias_aumento_laboral:
+            print(f"Como hoy es {dia_actual} (día laboral de alta demanda), la reserva tiene un aumento del 10%.")
+        else:
+            print(f"Como hoy es {dia_actual} (fin de semana), la reserva tiene un aumento del 10%.")
+
+>>>>>>> a5ac0d9c3d1b02136d4549b989c6a521b0b7754b
     print("¿Con qué desea pagar?")
     print("1 - Tarjeta (5% de recargo)")
     print("2 - Efectivo (Sin recargo)")
@@ -119,8 +147,13 @@ def gestion_reserva(hotel, piso, hab):
         print("Se seleccionó tarjeta. Se aplica un 5% de recargo.")
     else:
         print("Se seleccionó efectivo. No hay recargos extra.")
+<<<<<<< HEAD
     print()
     print(f"El precio final a abonar es de: ${precio_final}")
+=======
+
+    print(f"El precio final a abonar es de: ${precio_final:.2f}")
+>>>>>>> a5ac0d9c3d1b02136d4549b989c6a521b0b7754b
     return precio_final
 
 
@@ -181,12 +214,17 @@ def comprobante_reserva(dni, email, piso, hab, precio_final, nombre, apellido, c
     print(f"Email: {email}")
     print(f"Piso: {piso}")
     print(f"Habitación: {hab}")
+<<<<<<< HEAD
     print(f"Precio final a abonar: ${precio_final}")
     print()
     print(f"Fecha de check-in: {checkin[0]}/{checkin[1]}/{checkin[2]}")
     print(f"Hora de check-in:  {checkin[3]}:{checkin[4]:02d}")
 
     print("=" * 43)
+=======
+    print(f"Precio final a abonar: ${precio_final:.2f}")
+    print("-" * 30)
+>>>>>>> a5ac0d9c3d1b02136d4549b989c6a521b0b7754b
 
 def inicio():
     """La función inicio se encarga de mostrar un mensaje de bienvenida al usuario al iniciar el programa."""
@@ -197,218 +235,27 @@ def inicio():
     print("=" * 40)
     
 def habitaciones_hotel():
-    habitaciones = {
-        1: { 
-            1:{
-                "precio": 250000,
-                "tipo": "Habitación Estandar",
-                "descripcion": "Habitación con vista al jardín"
-            },
-            2:{
-                "precio": 250000,
-                "tipo": "Habitación Estandar",
-                "descripcion": "Habitación con vista al jardín"
-            },
-            3:{
-                "precio": 250000,
-                "tipo": "Habitación Estandar",
-                "descripcion": "Habitación con vista al jardín"
-            },
-            4:{
-                "precio": 250000,
-                "tipo": "Habitación Estandar",
-                "descripcion": "Habitación con vista al jardín"
-            },
-            5:{
-                "precio": 250000,
-                "tipo": "Habitación Estandar",
-                "descripcion": "Habitación con vista al jardín"
-            },
-            6:{
-                "precio": 250000,
-                "tipo": "Habitación Estandar",
-                "descripcion": "Habitación con vista al jardín"
-            },
-            7:{
-                "precio": 250000,
-                "tipo": "Habitación Estandar",
-                "descripcion": "Habitación con vista al jardín"
-            },
-            8:{
+    habitaciones = {}
+    for piso in range(1, 6):
+        if piso == 1:
+            info = {
                 "precio": 250000,
                 "tipo": "Habitación Estandar",
                 "descripcion": "Habitación con vista al jardín"
             }
-        }, 
-        2: { 
-            1:{
-                "precio": 300000,
-                "tipo": "Habitación Superior",
-                "descripcion": "Habitación con vista a la ciudad"
-            },
-            2:{
-                "precio": 300000,
-                "tipo": "Habitación Superior",
-                "descripcion": "Habitación con vista a la ciudad"
-            },
-            3:{
-                "precio": 300000,
-                "tipo": "Habitación Superior",
-                "descripcion": "Habitación con vista a la ciudad"
-            },
-            4:{
-                "precio": 300000,
-                "tipo": "Habitación Superior",
-                "descripcion": "Habitación con vista a la ciudad"
-            },
-            5:{
-                "precio": 300000,
-                "tipo": "Habitación Superior",
-                "descripcion": "Habitación con vista a la ciudad"
-            },
-            6:{
-                "precio": 300000,
-                "tipo": "Habitación Superior",
-                "descripcion": "Habitación con vista a la ciudad"
-            },
-            7:{
-                "precio": 300000,
-                "tipo": "Habitación Superior",
-                "descripcion": "Habitación con vista a la ciudad"
-            },
-            8:{
+        elif piso == 2:
+            info = {
                 "precio": 300000,
                 "tipo": "Habitación Superior",
                 "descripcion": "Habitación con vista a la ciudad"
             }
-        }, 
-        3: { 
-            1:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            2:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            3:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            4:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            5:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            6:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            7:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            8:{
+        else:
+            info = {
                 "precio": 350000,
                 "tipo": "Habitación Suite",
                 "descripcion": "Habitación con vista al mar"
             }
-        },
-         4: { 
-            1:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            2:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            3:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            4:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            5:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            6:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            7:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            8:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            }
-        },
-        5: { 
-            1:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            2:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            3:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            4:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            5:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            6:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            7:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            },
-            8:{
-                "precio": 350000,
-                "tipo": "Habitación Suite",
-                "descripcion": "Habitación con vista al mar"
-            }
-        } 
-    } 
+        habitaciones[piso] = {hab: info.copy() for hab in range(1, 9)}
     return habitaciones
 
 def mostrar_detalles_eleccion(habitacion_elegida):
@@ -425,7 +272,7 @@ def eleccion_habitacion():
     while True:
         try:
             tipo = int(input("Ingrese el tipo de habitación que desea elegir (1-Estándar, 2-Superior, 3-Suite): "))
-            if tipo not in [1, 2, 3]:
+            if tipo not in {1, 2, 3}:
                 raise ValueError
         except ValueError:
             print("Tipo de habitación inválido. Por favor, ingrese 1, 2 o 3.")
