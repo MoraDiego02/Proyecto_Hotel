@@ -2,21 +2,14 @@
 import re
 from funciones_hotel import *
 
-def main(historial = []):
+def main(historial=[]):
     inicio()
+    dnis_ingresados = [r[2] for r in historial]
     hotel = cargar_matriz()
-    nombre, apellido, dni, mail, telefono = cargar_datos(historial)
 
-    historial.append({
-        "nombre": nombre,
-        "apellido": apellido,
-        "dni": dni,
-        "mail": mail,
-        "telefono": telefono,
-        "checkin": checkin 
-    })
-
-   #Se controla que el DNI ingresado sea único para evitar duplicados en el sistema de reservas
+    nombre, apellido, dni, mail, telefono = cargar_datos()
+    
+    #Se controla que el DNI ingresado sea único para evitar duplicados en el sistema de reservas
     while True:
         try:
             if dni in dnis_ingresados:
@@ -52,46 +45,52 @@ def main(historial = []):
     Mostrar_habitaciones(hotel) 
     print(" ")
 
-    precio_final = gestion_reserva(hotel, piso, hab)
-    checkin = registrar_checkin()
+    precio_final, que_dia_es = gestion_reserva(hotel, piso, hab)
+    checkin = registrar_checkin(que_dia_es)
     comprobante_reserva(dni, mail, piso, hab, precio_final, nombre, apellido, checkin)
-
-    print() 
-    volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
-    while not re.match(r'^(si|no)$', volver_a_reservar, re.IGNORECASE):
-        print()
-        print("Respuesta inválida. Por favor ingrese 'si' o 'no'.")
-        print()
-        volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
+    historial.append((nombre, apellido, dni, mail, telefono, piso, hab, precio_final, checkin))
+    while True:
+        try:
+            volver_a_reservar = input("¿Desea realizar otra reserva? (si/no): ")
+            if not re.match(r'^(si|no)$', volver_a_reservar, re.IGNORECASE):
+                raise ValueError
+        except ValueError:
+            print("Respuesta inválida. Por favor ingrese 'si' o 'no'.")
+        else:
+            break
  
     if re.match(r'^si$', volver_a_reservar, re.IGNORECASE):
         main(historial)
-    
     else:
-        print()
-        ver_historial = input("¿Desea ver el historial de reservas? (si/no): ")
-        while not re.match(r'^(si|no)$', ver_historial, re.IGNORECASE):
-            print()
-            print("Respuesta inválida. Por favor ingrese 'si' o 'no'.")
-            print()
-            ver_historial = input("¿Desea ver el historial de reservas? (si/no): ")
+        while True:
+            try:
+                ver_historial = input("¿Desea ver el historial de reservas? (si/no): ")
+                if not re.match(r'^(si|no)$', ver_historial, re.IGNORECASE):
+                    raise ValueError
+            except ValueError:
+                print("Respuesta inválida. Por favor ingrese 'si' o 'no'.")
+            else:
+                break
 
-    if re.match(r'^si$', ver_historial, re.IGNORECASE):
-        print("\n" + "=" * 38)
-        print()
-        print("|     HISTORIAL DE RESERVAS DEL DÍA     |")
-        print()
-        print("=" * 38)
-        for i, r in enumerate(historial, 1):
-            print(f"  {i}. {r['nombre']} {r['apellido']}")
-            print(f"     DNI: {r['dni']}")
-            print(f"     Mail: {r['mail']}")
-            print(f"     Teléfono: {r['telefono']}")
-            print(f"     Fecha de check-in: {r['checkin'][0]}/{r['checkin'][1]}/{r['checkin'][2]}")
-            print(f"     Hora de check-in:  {r['checkin'][3]}:{r['checkin'][4]:02d}")
-            print("=" * 38)
-    print()
+        if re.match(r'^si$', ver_historial, re.IGNORECASE):
+            dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+            print("\n" + "=" * 43)
+            print()
+            print("|     HISTORIAL DE RESERVAS DEL DÍA     |")
+            print()
+            print("=" * 43)
+            for i, r in enumerate(historial, 1):
+                print(f"  {i}. {r[0]} {r[1]}")
+                print(f"     DNI:      {r[2]}")
+                print(f"     Mail:     {r[3]}")
+                print(f"     Teléfono: {r[4]}")
+                print(f"     Piso:     {r[5]}")
+                print(f"     Hab:      {r[6]}")
+                print(f"     Precio:   ${r[7]:.2f}")
+                print(f"     Fecha de check-in: {r[8][0]}/{r[8][1]}/{r[8][2]} ({dias[r[8][5]]})")
+                print(f"     Hora de check-in:  {r[8][3]}:{r[8][4]:02d}")
+                print("=" * 43)
+                
     print("Gracias por utilizar nuestro sistema de reservas. ¡Hasta luego!")
- 
 if __name__ == "__main__":
     main()
