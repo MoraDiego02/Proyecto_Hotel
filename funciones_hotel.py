@@ -2,6 +2,29 @@ import random
 import re
 from functools import reduce
 
+def validar_dni(dni):
+    """Devuelve True si el DNI es válido (8 dígitos), False en caso contrario."""
+    if re.match(r'^\d{8}$', dni):
+        return True
+    return False
+
+def calcular_precio(precio_estandar, dia_actual, metodo_pago):
+    """Calcula matemáticamente el precio utilizando los parámetros fijos (sin inputs)."""
+    dias_semana_laboral = {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes"}
+    dias_fin_semana = {"Sabado", "Domingo"}
+    todos_los_dias = dias_semana_laboral.union(dias_fin_semana)
+    dias_descuento = {"Lunes", "Martes", "Miercoles", "Jueves"}
+    
+    if dia_actual in dias_descuento:
+        mult_dia = 0.80
+    else:
+        mult_dia = 1.10
+        
+    mult_pago = 1.05 if metodo_pago == 1 else 1.0
+    multiplicadores = [mult_dia, mult_pago]
+    
+    precio_final = reduce(lambda acc, m: acc * m, multiplicadores, precio_estandar)
+    return precio_final
 
 def cargar_datos():
     #Valicacion con try-except para el ingreso de nombre y apellido
@@ -35,7 +58,7 @@ def cargar_datos():
         try:
             dni = input("|    Ingrese su DNI: ")
             print("-" * 40)
-            if not re.match(r'^\d{8}$', dni):
+            if not validar_dni(dni):
                 raise ValueError
         except ValueError:
             print("DNI inválido. Debe tener exactamente 8 dígitos.")
@@ -127,10 +150,7 @@ def gestion_reserva(hotel, piso, hab):
         else:
             break
 
-    mult_pago = 1.05 if metodo_pago == 1 else 1.0
-
-    multiplicadores = [mult_dia, mult_pago]
-    precio_final = reduce(lambda acc, m: acc * m, multiplicadores, precio_estandar)
+    precio_final = calcular_precio(precio_estandar, dia_actual, metodo_pago)
 
     if metodo_pago == 1:
         print("Se seleccionó tarjeta. Se aplica un 5% de recargo.")
