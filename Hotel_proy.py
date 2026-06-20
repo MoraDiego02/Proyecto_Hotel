@@ -3,10 +3,6 @@ from funciones_hotel import *
 
 def main():
     inicio()
-
-    # Se recupera el estado persistido en los archivos de texto una sola
-    # vez al iniciar el programa, para que los datos no se pierdan aunque
-    # el programa se cierre y se vuelva a ejecutar.
     historial = leerHistorial()
     dnis_ingresados = []
     mails_ingresados = []
@@ -14,13 +10,8 @@ def main():
         dnis_ingresados.append(reserva[2])
         mails_ingresados.append(reserva[3])
     hotel = leerEstadoHabitaciones()
-
-    # El sistema permite cargar varias reservas en la misma ejecución
-    # repitiendo este bloque con un while en vez de volver a llamar a main().
     while True:
         nombre, apellido, dni, mail, telefono = cargar_datos()
-
-        #Se controla que el DNI ingresado sea único para evitar duplicados en el sistema de reservas
         while True:
             try:
                 if dni in dnis_ingresados:
@@ -32,7 +23,6 @@ def main():
             else:
                 break
 
-        #Se avisa si el mail ya fue registrado antes, pero no bloquea la reserva
         if mail in mails_ingresados:
             print("Aviso: este correo electrónico ya fue utilizado en otra reserva.")
         mails_ingresados.append(mail)
@@ -42,7 +32,6 @@ def main():
         listado_habitaciones(datos_hotel)
         print(" ")
 
-        #Se controla que la habitación elegida no esté ya ocupada (según el archivo guardado)
         while True:
             piso = pedir_piso()
             hab = pedir_habitacion()
@@ -54,7 +43,6 @@ def main():
             else:
                 break
 
-        #Se controla que la habitación seleccionada exista en el diccionario
         while True:
             try:
                 habitacion_elegida = datos_hotel[piso][hab]
@@ -77,9 +65,6 @@ def main():
 
         nueva_reserva = (nombre, apellido, dni, mail, telefono, piso, hab, precio_final, checkin)
         historial.append(nueva_reserva)
-
-        # Persistencia automática en archivos de texto: se guarda apenas se
-        # concreta la reserva, sin esperar a que el usuario lo pida explícitamente.
         guardarReservaHistorial(nueva_reserva)
         actualizarEstadoHabitacion(piso, hab)
 
