@@ -288,10 +288,10 @@ def registrar_checkin(que_dia_es):
     dias_por_mes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     mes = random.randint(1, 12)
     dia = random.randint(1, dias_por_mes[mes - 1])
-    anio = random.randint(2024, 2026)
+    año = random.randint(2024, 2026)
     hora = random.randint(0, 23)
     minuto = random.randint(0, 59)
-    checkin = (dia, mes, anio, hora, minuto, que_dia_es)
+    checkin = (dia, mes, año, hora, minuto, que_dia_es)
     return checkin
 
 def guardarReservaHistorial(reserva):
@@ -302,11 +302,11 @@ def guardarReservaHistorial(reserva):
     """
     try:
         nombre, apellido, dni, mail, telefono, piso, hab, precio_final, checkin = reserva
-        dia, mes, anio, hora, minuto, dia_semana = checkin
+        dia, mes, año, hora, minuto, dia_semana = checkin
         with open("archivosDeTexto/HotelHistorialReservas.csv", "a") as archivo:
             archivo.write(
                 f"{nombre};{apellido};{dni};{mail};{telefono};{piso};{hab};"
-                f"{precio_final:.2f};{dia};{mes};{anio};{hora};{minuto};{dia_semana}\n"
+                f"{precio_final:.2f};{dia};{mes};{año};{hora};{minuto};{dia_semana}\n"
             )
         print("Reserva guardada correctamente en el historial.")
     except (IOError, OSError):
@@ -328,8 +328,8 @@ def leerHistorial():
                 if not linea:
                     continue
                 try:
-                    nombre, apellido, dni, mail, telefono, piso, hab, precio_final, dia, mes, anio, hora, minuto, dia_semana = linea.split(";")
-                    checkin = (int(dia), int(mes), int(anio), int(hora), int(minuto), int(dia_semana))
+                    nombre, apellido, dni, mail, telefono, piso, hab, precio_final, dia, mes, año, hora, minuto, dia_semana = linea.split(";")
+                    checkin = (int(dia), int(mes), int(año), int(hora), int(minuto), int(dia_semana))
                     reserva = (nombre, apellido, dni, mail, telefono, int(piso), int(hab), float(precio_final), checkin)
                     historial.append(reserva)
                 except ValueError:
