@@ -2,9 +2,31 @@ import random
 import re
 from functools import reduce
 
+def validar_dni(dni):
+    """Devuelve True si el DNI es válido (8 dígitos), False en caso contrario."""
+    if re.match(r'^\d{8}$', dni):
+        return True
+    return False
+
+def calcular_precio(precio_estandar, dia_actual, metodo_pago):
+    """Calcula matemáticamente el precio utilizando los parámetros fijos (sin inputs)."""
+    dias_semana_laboral = {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes"}
+    dias_fin_semana = {"Sabado", "Domingo"}
+    todos_los_dias = dias_semana_laboral.union(dias_fin_semana)
+    dias_descuento = {"Lunes", "Martes", "Miercoles", "Jueves"}
+    
+    if dia_actual in dias_descuento:
+        mult_dia = 0.80
+    else:
+        mult_dia = 1.10
+        
+    mult_pago = 1.05 if metodo_pago == 1 else 1.0
+    multiplicadores = [mult_dia, mult_pago]
+    
+    precio_final = reduce(lambda acc, m: acc * m, multiplicadores, precio_estandar)
+    return precio_final
 
 def cargar_datos():
-    #Valicacion con try-except para el ingreso de nombre y apellido
     while True:
         try:
             nombre = input("|    Ingrese su nombre: ")
@@ -35,7 +57,7 @@ def cargar_datos():
         try:
             dni = input("|    Ingrese su DNI: ")
             print("-" * 40)
-            if not re.match(r'^\d{8}$', dni):
+            if not validar_dni(dni):
                 raise ValueError
         except ValueError:
             print("DNI inválido. Debe tener exactamente 8 dígitos.")
@@ -53,7 +75,6 @@ def cargar_datos():
         else:
             break
 
-    # Validacion con try-except para el ingreso del numero de telefono
     while True:
         try:
             telefono = input("|    Ingrese su número de teléfono: ")
@@ -73,7 +94,6 @@ def gestion_reserva(hotel, piso, hab):
     que_dia_es = generar_dia()
     datos_habitaciones = habitaciones_hotel()
 
-    #Se controla que el precio base no sea negativo
     while True:
         try:
             precio_estandar = datos_habitaciones[piso][hab]["precio"]
@@ -84,21 +104,12 @@ def gestion_reserva(hotel, piso, hab):
         else:
             break
     
-    # Definimos conjuntos de días para usar operaciones matemáticas de conjuntos
     dias_semana_laboral = {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes"}
     dias_fin_semana = {"Sabado", "Domingo"}
-
-    # 1. Unión (.union()): Combina elementos de ambos conjuntos
     todos_los_dias = dias_semana_laboral.union(dias_fin_semana)
-
     dias_descuento = {"Lunes", "Martes", "Miercoles", "Jueves"}
-
-    # 2. Diferencia (.difference()): Encuentra los elementos que están en el primero pero no en el segundo
     dias_aumento = todos_los_dias.difference(dias_descuento)
-
-    # 3. Intersección (.intersection()): Encuentra los elementos en ambos conjuntos (Viernes en este caso)
     dias_aumento_laboral = dias_semana_laboral.intersection(dias_aumento)
-
     dia_actual = dias[que_dia_es]
 
     if dia_actual in dias_descuento:
@@ -115,7 +126,6 @@ def gestion_reserva(hotel, piso, hab):
     print("1 - Tarjeta (5% de recargo)")
     print("2 - Efectivo (Sin recargo)")
 
-    #Validacion con try-except para el ingreso del método de pago
     while True:
         try:
             metodo_pago_str = input("Ingrese el tipo (1 o 2): ")
@@ -127,10 +137,7 @@ def gestion_reserva(hotel, piso, hab):
         else:
             break
 
-    mult_pago = 1.05 if metodo_pago == 1 else 1.0
-
-    multiplicadores = [mult_dia, mult_pago]
-    precio_final = reduce(lambda acc, m: acc * m, multiplicadores, precio_estandar)
+    precio_final = calcular_precio(precio_estandar, dia_actual, metodo_pago)
 
     if metodo_pago == 1:
         print("Se seleccionó tarjeta. Se aplica un 5% de recargo.")
@@ -143,7 +150,6 @@ def gestion_reserva(hotel, piso, hab):
 
 def pedir_habitacion():
     """Solicita el número de habitación (1-3). Controla letras y valores fuera de rango con try/except."""
-    #Validacion con try-except para el ingreso del número de habitación
     while True:
         try:
             hab = int(input("Ingrese el número de la habitación (1-8): "))
@@ -212,6 +218,7 @@ def inicio():
     print("-" * 40)
     
 def habitaciones_hotel():
+    """Devuelve un diccionario con la información de las habitaciones del hotel, organizado por piso y número de habitación."""
     habitaciones = {}
     for piso in range(1, 6):
         if piso == 1:
@@ -246,6 +253,7 @@ def mostrar_detalles_eleccion(habitacion_elegida):
     print("=" * 30 + "\n")
 
 def eleccion_habitacion():
+    """Solicita al usuario que elija un tipo de habitación (1-Estándar, 2-Superior, 3-Suite) y devuelve el número correspondiente. Controla entradas inválidas con try/except."""
     while True:
         try:
             tipo = int(input("Ingrese el tipo de habitación que desea elegir (1-Estándar, 2-Superior, 3-Suite): "))
@@ -264,6 +272,7 @@ def eleccion_habitacion():
     return tipo
 
 def listado_habitaciones(datos_hotel):
+    """Muestra un listado completo de las habitaciones del hotel, organizadas por piso, con su tipo y precio base. Controla que el diccionario tenga la estructura esperada."""
     print("Listado completo de habitaciones:")
     for piso, habitaciones in datos_hotel.items():
         primer_habitacion = habitaciones[1]
@@ -275,6 +284,7 @@ def listado_habitaciones(datos_hotel):
     print("\n" + "=" * 30)
 
 def registrar_checkin(que_dia_es):
+    """Genera una fecha y hora de check-in aleatoria, con el formato (día, mes, año, hora, minuto, día de la semana). El día de la semana se recibe como parámetro para que coincida con el día generado en gestion_reserva()."""
     dias_por_mes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     mes = random.randint(1, 12)
     dia = random.randint(1, dias_por_mes[mes - 1])
@@ -284,24 +294,11 @@ def registrar_checkin(que_dia_es):
     checkin = (dia, mes, anio, hora, minuto, que_dia_es)
     return checkin
 
-
-# ============================================================
-#                MANEJO DE ARCHIVOS DE TEXTO
-# ============================================================
-
-# ============================================================
-#                MANEJO DE ARCHIVOS DE TEXTO
-# ============================================================
-# Los archivos archivosDeTexto/HotelHistorialReservas.csv y
-# archivosDeTexto/HotelEstadoHabitaciones.csv deben existir de antemano
-# (se crean una sola vez, a mano), igual que en el ejemplo del Candybar.
-
-
 def guardarReservaHistorial(reserva):
     """
     Agrega una línea nueva al archivo HotelHistorialReservas.csv con los
     datos de la reserva, sin pisar las reservas ya guardadas.
-    'reserva' es la tupla (nombre, apellido, dni, mail, telefono, piso, hab, precio_final, checkin)
+    "reserva" es la tupla (nombre, apellido, dni, mail, telefono, piso, hab, precio_final, checkin)
     """
     try:
         nombre, apellido, dni, mail, telefono, piso, hab, precio_final, checkin = reserva
@@ -363,7 +360,6 @@ def guardarEstadoHabitaciones(hotel):
 def actualizarEstadoHabitacion(piso, hab):
     """
     Marca una única habitación como ocupada dentro de HotelEstadoHabitaciones.csv,
-    siguiendo el mismo patrón de archivo temporal que actualizarCandybar:
     primero se copia el archivo viejo a uno temporal, luego se reescribe el
     archivo original línea por línea aplicando el cambio, y por último se
     vacía el temporal.
@@ -433,5 +429,3 @@ def leerEstadoHabitaciones():
             fila.append(1 if ocupada == 1 else "       ")
         matriz.append(fila)
     return matriz
-
-
