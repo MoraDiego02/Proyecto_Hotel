@@ -2,29 +2,6 @@ import random
 import re
 from functools import reduce
 
-def validar_dni(dni):
-    """Devuelve True si el DNI es válido (8 dígitos), False en caso contrario."""
-    if re.match(r'^\d{8}$', dni):
-        return True
-    return False
-
-def calcular_precio(precio_estandar, dia_actual, metodo_pago):
-    """Calcula matemáticamente el precio utilizando los parámetros fijos (sin inputs)."""
-    dias_semana_laboral = {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes"}
-    dias_fin_semana = {"Sabado", "Domingo"}
-    todos_los_dias = dias_semana_laboral.union(dias_fin_semana)
-    dias_descuento = {"Lunes", "Martes", "Miercoles", "Jueves"}
-    
-    if dia_actual in dias_descuento:
-        mult_dia = 0.80
-    else:
-        mult_dia = 1.10
-        
-    mult_pago = 1.05 if metodo_pago == 1 else 1.0
-    multiplicadores = [mult_dia, mult_pago]
-    
-    precio_final = reduce(lambda acc, m: acc * m, multiplicadores, precio_estandar)
-    return precio_final
 
 def cargar_datos():
     #Valicacion con try-except para el ingreso de nombre y apellido
@@ -58,7 +35,7 @@ def cargar_datos():
         try:
             dni = input("|    Ingrese su DNI: ")
             print("-" * 40)
-            if not validar_dni(dni):
+            if not re.match(r'^\d{8}$', dni):
                 raise ValueError
         except ValueError:
             print("DNI inválido. Debe tener exactamente 8 dígitos.")
@@ -150,7 +127,10 @@ def gestion_reserva(hotel, piso, hab):
         else:
             break
 
-    precio_final = calcular_precio(precio_estandar, dia_actual, metodo_pago)
+    mult_pago = 1.05 if metodo_pago == 1 else 1.0
+
+    multiplicadores = [mult_dia, mult_pago]
+    precio_final = reduce(lambda acc, m: acc * m, multiplicadores, precio_estandar)
 
     if metodo_pago == 1:
         print("Se seleccionó tarjeta. Se aplica un 5% de recargo.")
@@ -286,10 +266,13 @@ def eleccion_habitacion():
 def listado_habitaciones(datos_hotel):
     print("Listado completo de habitaciones:")
     for piso, habitaciones in datos_hotel.items():
-        print(f"\n Piso {piso}")
+        primer_habitacion = habitaciones[1]
+        print(f"\nPiso {piso} - {primer_habitacion['tipo']} - ${primer_habitacion['precio']}")
+        print("Habitaciones: ", end="")
         for hab, detalles in habitaciones.items():
-            print(f"  Habitación {hab}: {detalles['tipo']} - {detalles['descripcion']} - ${detalles['precio']}")
-    print("\n" + "=" * 30)  
+            print(f"{hab}  ", end="")
+        print()
+    print("\n" + "=" * 30)
 
 def registrar_checkin(que_dia_es):
     dias_por_mes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -301,5 +284,154 @@ def registrar_checkin(que_dia_es):
     checkin = (dia, mes, anio, hora, minuto, que_dia_es)
     return checkin
 
+
+# ============================================================
+#                MANEJO DE ARCHIVOS DE TEXTO
+# ============================================================
+
+# ============================================================
+#                MANEJO DE ARCHIVOS DE TEXTO
+# ============================================================
+# Los archivos archivosDeTexto/HotelHistorialReservas.csv y
+# archivosDeTexto/HotelEstadoHabitaciones.csv deben existir de antemano
+# (se crean una sola vez, a mano), igual que en el ejemplo del Candybar.
+
+
+def guardarReservaHistorial(reserva):
+    """
+    Agrega una línea nueva al archivo HotelHistorialReservas.csv con los
+    datos de la reserva, sin pisar las reservas ya guardadas.
+    'reserva' es la tupla (nombre, apellido, dni, mail, telefono, piso, hab, precio_final, checkin)
+    """
+    try:
+        nombre, apellido, dni, mail, telefono, piso, hab, precio_final, checkin = reserva
+        dia, mes, anio, hora, minuto, dia_semana = checkin
+        with open("archivosDeTexto/HotelHistorialReservas.csv", "a") as archivo:
+            archivo.write(
+                f"{nombre};{apellido};{dni};{mail};{telefono};{piso};{hab};"
+                f"{precio_final:.2f};{dia};{mes};{anio};{hora};{minuto};{dia_semana}\n"
+            )
+        print("Reserva guardada correctamente en el historial.")
+    except (IOError, OSError):
+        print("Error al abrir el archivo del historial.")
+
+
+def leerHistorial():
+    """
+    Lee HotelHistorialReservas.csv línea por línea y devuelve la lista de
+    reservas en el mismo formato de tupla que se usa en memoria:
+    (nombre, apellido, dni, mail, telefono, piso, hab, precio_final, checkin)
+    Si el archivo no existe o está vacío, devuelve una lista vacía.
+    """
+    historial = []
+    try:
+        with open("archivosDeTexto/HotelHistorialReservas.csv", "r") as archivo:
+            for linea in archivo:
+                linea = linea.strip()
+                if not linea:
+                    continue
+                try:
+                    nombre, apellido, dni, mail, telefono, piso, hab, precio_final, dia, mes, anio, hora, minuto, dia_semana = linea.split(";")
+                    checkin = (int(dia), int(mes), int(anio), int(hora), int(minuto), int(dia_semana))
+                    reserva = (nombre, apellido, dni, mail, telefono, int(piso), int(hab), float(precio_final), checkin)
+                    historial.append(reserva)
+                except ValueError:
+                    continue
+    except (IOError, OSError):
+        print("Error al abrir el archivo del historial.")
+    return historial
+
+
+def guardarEstadoHabitaciones(hotel):
+    """
+    Reescribe por completo HotelEstadoHabitaciones.csv con el estado actual
+    de la matriz del hotel (una línea por habitación: id;piso;hab;ocupada).
+    El id es "piso-hab" para identificar cada habitación de forma única.
+    """
+    try:
+        with open("archivosDeTexto/HotelEstadoHabitaciones.csv", "w") as archivo:
+            for i, fila_piso in enumerate(hotel, start=1):
+                for j, celda in enumerate(fila_piso, start=1):
+                    ocupada = 1 if celda == 1 else 0
+                    id_hab = f"{i}-{j}"
+                    archivo.write(f"{id_hab};{i};{j};{ocupada}\n")
+        print("Estado de habitaciones guardado correctamente.")
+    except (IOError, OSError):
+        print("Error al abrir el archivo de habitaciones.")
+
+
+def actualizarEstadoHabitacion(piso, hab):
+    """
+    Marca una única habitación como ocupada dentro de HotelEstadoHabitaciones.csv,
+    siguiendo el mismo patrón de archivo temporal que actualizarCandybar:
+    primero se copia el archivo viejo a uno temporal, luego se reescribe el
+    archivo original línea por línea aplicando el cambio, y por último se
+    vacía el temporal.
+    """
+    id_hab = f"{piso}-{hab}"
+    try:
+        with open("archivosDeTexto/HotelEstadoHabitacionesTemp.csv", "w") as archTemporal:
+            with open("archivosDeTexto/HotelEstadoHabitaciones.csv", "r") as archViejo:
+                for linea in archViejo:
+                    archTemporal.write(linea)
+        with open("archivosDeTexto/HotelEstadoHabitacionesTemp.csv", "r") as archTemporal:
+            with open("archivosDeTexto/HotelEstadoHabitaciones.csv", "w") as archActualizado:
+                for linea in archTemporal:
+                    if linea.split(";")[0] == id_hab:
+                        _id, p, h, ocupada = linea.strip().split(";")
+                        archActualizado.write(f"{_id};{p};{h};1\n")
+                    else:
+                        archActualizado.write(linea)
+        with open("archivosDeTexto/HotelEstadoHabitacionesTemp.csv", "w"):
+            pass
+        print("Actualización de habitación exitosa.")
+    except (IOError, OSError):
+        print("Error al abrir el archivo de habitaciones.")
+
+
+def leerEstadoHabitaciones():
+    """
+    Lee HotelEstadoHabitaciones.csv y reconstruye la matriz del hotel
+    (1 = ocupada, "       " = libre, igual que cargar_matriz()).
+    Si el archivo existe pero está vacío (recién creado a mano), se lo
+    completa con todas las habitaciones libres antes de devolver la matriz,
+    ya que actualizarEstadoHabitacion() necesita encontrar cada línea para
+    poder modificarla.
+    """
+    filas_por_piso = {}
+    try:
+        with open("archivosDeTexto/HotelEstadoHabitaciones.csv", "r") as archivo:
+            for linea in archivo:
+                linea = linea.strip()
+                if not linea:
+                    continue
+                try:
+                    _id, piso, hab, ocupada = linea.split(";")
+                    piso = int(piso)
+                    hab = int(hab)
+                    ocupada = int(ocupada)
+                except ValueError:
+                    continue
+                filas_por_piso.setdefault(piso, {})[hab] = ocupada
+    except (IOError, OSError):
+        print("Error al abrir el archivo de habitaciones.")
+        return cargar_matriz()
+
+    if len(filas_por_piso) == 0:
+        matriz = cargar_matriz()
+        guardarEstadoHabitaciones(matriz)
+        return matriz
+
+    cant_pisos = max(filas_por_piso.keys())
+    cant_habs = max(h for habs in filas_por_piso.values() for h in habs.keys())
+
+    matriz = []
+    for i in range(1, cant_pisos + 1):
+        fila = []
+        for j in range(1, cant_habs + 1):
+            ocupada = filas_por_piso.get(i, {}).get(j, 0)
+            fila.append(1 if ocupada == 1 else "       ")
+        matriz.append(fila)
+    return matriz
 
 
