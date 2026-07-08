@@ -189,11 +189,30 @@ def Mostrar_habitaciones(matriz):
     return matriz
 
 def cargar_matriz():
-    """La funcion cargar_matriz se encarga de crear una matriz de 3x3 con valores iniciales de 0, donde cada fila representa un piso y cada columna representa una habitación. Retorna la matriz creada."""
+    """La funcion cargar_matriz se encarga de crear una matriz de 5x8 con valores iniciales libres.
+    Cada fila representa un piso y cada columna representa una habitación."""
     filas = 5
     columnas = 8
     matriz = [[ "       " for _ in range(columnas)] for _ in range(filas)]
     return matriz
+
+
+def contar_habitaciones_ocupadas(hotel, piso=0):
+    """Cuenta recursivamente cuántas habitaciones ocupadas hay en toda la matriz.
+    Asume que las celdas ocupadas contienen 1 y las libres contienen "       "."""
+    if piso == len(hotel):
+        return 0
+    ocupadas_en_piso = hotel[piso].count(1)
+    return ocupadas_en_piso + contar_habitaciones_ocupadas(hotel, piso + 1)
+
+
+def total_facturado(historial):
+    """Suma recursivamente el precio_final de todas las reservas del historial."""
+    if len(historial) == 0:
+        return 0
+    precio_primera_reserva = historial[0][7]  
+    return precio_primera_reserva + total_facturado(historial[1:])
+
 
 def comprobante_reserva(dni, email, piso, hab, precio_final, nombre, apellido, checkin):
     """Muestra un comprobante de reserva con DNI, email, piso, habitación, precio final y check-in."""
