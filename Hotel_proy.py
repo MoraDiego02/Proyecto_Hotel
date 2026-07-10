@@ -95,6 +95,9 @@ def main():
         dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
         print("\n" + "=" * 43)
         print()
+        print(f"Habitaciones ocupadas en total: {contar_habitaciones_ocupadas(hotel)}")
+        print(f"Total facturado: ${total_facturado(historial):.2f}")
+        print()
         print("|     HISTORIAL DE RESERVAS DEL DÍA     |")
         print()
         print("=" * 43)
