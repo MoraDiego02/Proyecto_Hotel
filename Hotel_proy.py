@@ -57,6 +57,8 @@ def main():
         hotel[piso-1][hab-1] = 1 
         print("Reserva seleccionada:")
         Mostrar_habitaciones(hotel) 
+        ocupadas = contar_habitaciones_ocupadas(hotel)
+        print(f"Cantidad de habitaciones ocupadas: {ocupadas}")
         print(" ")
 
         precio_final, que_dia_es = gestion_reserva(hotel, piso, hab)
